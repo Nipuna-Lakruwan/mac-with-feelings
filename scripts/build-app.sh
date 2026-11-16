@@ -17,10 +17,12 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN" "$APP/Contents/MacOS/MacWithFeelings"
 cp Resources/Info.plist "$APP/Contents/Info.plist"
 
-echo "==> Drawing the icon"
+echo "==> Making the icon"
+# Resources/AppIcon.png is committed, because rendering needs a GPU that CI machines lack.
+# Redraw it after changing the face with: .build/debug/MacWithFeelings --render-icon Resources/AppIcon.png
 ICONSET=$(mktemp -d)/AppIcon.iconset
 mkdir -p "$ICONSET"
-"$BIN" --render-icon "$ICONSET/icon_512x512@2x.png"
+cp Resources/AppIcon.png "$ICONSET/icon_512x512@2x.png"
 for size in 16 32 128 256 512; do
   sips -z $size $size "$ICONSET/icon_512x512@2x.png" --out "$ICONSET/icon_${size}x${size}.png" >/dev/null
   double=$((size * 2))
